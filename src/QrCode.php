@@ -171,7 +171,7 @@ class QrCode implements QrCodeInterface
 
     public function setLogoPath(string $logoPath): void
     {
-        $logoPath = realpath($logoPath);
+        //$logoPath = realpath($logoPath);
 
         if (!is_file($logoPath)) {
             throw new InvalidPathException('Invalid logo path: '.$logoPath);
