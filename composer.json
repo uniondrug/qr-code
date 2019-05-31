@@ -1,0 +1,27 @@
+{
+  "name": "uniondrug/qr-code",
+  "type": "library",
+  "description": "Uniondrug qr-code",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Uniondrug Dev Team",
+      "email": "dev@uniondrug.cn"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "ext-phalcon": "^3.2.0",
+    "symfony/dotenv": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Endroid\\QrCode\\": "src/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "prefer-stable": true
+}
