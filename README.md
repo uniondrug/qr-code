@@ -1,40 +1,45 @@
-# QR Code
+二维码生成问题修正
 
-*By [endroid](https://endroid.nl/)*
+问题描述：
+    原endroid/qr-code二维码生成组件与phar包不兼容,  参考的错误信息："Invalid logo path: "
 
-[![Latest Stable Version](http://img.shields.io/packagist/v/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
-[![Build Status](http://img.shields.io/travis/endroid/qr-code.svg)](http://travis-ci.org/endroid/qr-code)
-[![Total Downloads](http://img.shields.io/packagist/dt/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
-[![Monthly Downloads](http://img.shields.io/packagist/dm/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
-[![License](http://img.shields.io/packagist/l/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
+    from: endroid/qr-code:3.5.8
 
-This library helps you generate QR codes in a jiffy. Makes use of [bacon/bacon-qr-code](https://github.com/Bacon/BaconQrCode)
-to generate the matrix and [khanamiryan/qrcode-detector-decoder](https://github.com/khanamiryan/php-qrcode-detector-decoder)
-for validating generated QR codes. Further extended with Twig extensions, generation routes, a factory and a
-Symfony bundle for easy installation and configuration.
+解决步骤：
 
-## Installation
+    1. 所有使用endroid/qr-code并且以phar启动的项目请修改项目根目录composer.json, 将原有的"endroid/qr-code": "^1.0"修改为"uniondrug/qr-code": "^1.0"
+        "require" : {
+               ...
+               "uniondrug/qr-code": "^1.0"
+        }
 
-Use [Composer](https://getcomposer.org/) to install the library.
+    2. 在项目根目录app目录下查找setErrorCorrectionLevel, 将$qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH); 修改为 $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevel(ErrorCorrectionLevel::HIGH));
 
-``` bash
+    3. 上传代码，更新composer，重新生成phar包，并重启服务
+
+---------------------------------------------------------------------------------------
+
+以下内容为：endroid/qr-code:3.5.8原README
+
+QR Code
+By endroid
+
+Latest Stable Version Build Status Total Downloads Monthly Downloads License
+
+This library helps you generate QR codes in a jiffy. Makes use of bacon/bacon-qr-code to generate the matrix and khanamiryan/qrcode-detector-decoder for validating generated QR codes. Further extended with Twig extensions, generation routes, a factory and a Symfony bundle for easy installation and configuration.
+
+Installation
+Use Composer to install the library.
+
 $ composer require endroid/qr-code
-```
-
-## Basic usage
-
-```php
+Basic usage
 use Endroid\QrCode\QrCode;
 
 $qrCode = new QrCode('Life is too short to be generating QR codes');
 
 header('Content-Type: '.$qrCode->getContentType());
 echo $qrCode->writeString();
-```
-
-## Advanced usage
-
-```php
+Advanced usage
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCode;
@@ -67,45 +72,26 @@ $qrCode->writeFile(__DIR__.'/qrcode.png');
 
 // Create a response object
 $response = new QrCodeResponse($qrCode);
-```
+QR Code
 
-![QR Code](https://endroid.nl/qr-code/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
+Built-in validation reader
+You can enable the built-in validation reader (disabled by default) by calling setValidateResult(true). This validation reader does not guarantee that the QR code will be readable by all readers but it helps you provide a minimum level of quality.
 
-## Built-in validation reader
-
-You can enable the built-in validation reader (disabled by default) by calling
-setValidateResult(true). This validation reader does not guarantee that the QR
-code will be readable by all readers but it helps you provide a minimum level
-of quality.
- 
-The readability of a QR code is primarily determined by the size, the input
-length, the error correction level and any possible logo over the image so you
-can tweak these parameters if you are looking for optimal results. You can also
-check $qrCode->getRoundBlockSize() value to see if block dimensions are rounded
-so that the image is more sharp and readable.
+The readability of a QR code is primarily determined by the size, the input length, the error correction level and any possible logo over the image so you can tweak these parameters if you are looking for optimal results. You can also check $qrCode->getRoundBlockSize() value to see if block dimensions are rounded so that the image is more sharp and readable.
 
 Take note that the validator can consume quite amount of additional resources.
 
-## Symfony integration
+Symfony integration
+The endroid/qr-code-bundle integrates the QR code library in Symfony for an even better experience.
 
-The [endroid/qr-code-bundle](https://github.com/endroid/qr-code-bundle)
-integrates the QR code library in Symfony for an even better experience.
+Configure your defaults (like image size, default writer etc.)
+Generate QR codes quickly from anywhere via the factory service
+Generate QR codes directly by typing an URL like /qr-code/<text>.png?size=300
+Generate QR codes or URLs directly from Twig using dedicated functions
+Read the bundle documentation for more information.
 
-* Configure your defaults (like image size, default writer etc.)
-* Generate QR codes quickly from anywhere via the factory service
-* Generate QR codes directly by typing an URL like /qr-code/\<text>.png?size=300
-* Generate QR codes or URLs directly from Twig using dedicated functions
- 
-Read the [bundle documentation](https://github.com/endroid/qr-code-bundle)
-for more information.
+Versioning
+Version numbers follow the MAJOR.MINOR.PATCH scheme. Backwards compatibility breaking changes will be kept to a minimum but be aware that these can occur. Lock your dependencies for production and test your code when upgrading.
 
-## Versioning
-
-Version numbers follow the MAJOR.MINOR.PATCH scheme. Backwards compatibility
-breaking changes will be kept to a minimum but be aware that these can occur.
-Lock your dependencies for production and test your code when upgrading.
-
-## License
-
-This bundle is under the MIT license. For the full copyright and license
-information please view the LICENSE file that was distributed with this source code.
+License
+This bundle is under the MIT license. For the full copyright and license information please view the LICENSE file that was distributed with this source code.
